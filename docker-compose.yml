@@ -9,11 +9,11 @@ services:
       - "3001:3001"
     environment:
       PORT: ${PORT:-3001}
-      DB_HOST: ${DB_HOST:-localhost}
+      DB_HOST: ${DB_HOST:-10.0.3.238}
       DB_PORT: ${DB_PORT:-3306}
       DB_NAME: ${DB_NAME:-innovatech_ops}
       DB_USER: ${DB_USER:-innovatech_user}
       DB_PASSWORD: ${DB_PASSWORD:-innovatech_password}
-      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://98.88.43.196}
     labels:
       - "com.innovatech.service=backend"
