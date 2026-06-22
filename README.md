@@ -1,17 +1,47 @@
-# Backend-Devops
+# Backend DevOps
 
-<<<<<<< Updated upstream
-API Node.js + Express + MySQL para Innovatech Inventory System
+API REST de inventario y tickets para Innovatech Chile, desarrollada con Node.js y Express.
 
-## Setup Local
+## 🚀 Descripción
+Backend que proporciona los servicios API para la gestión de inventario y sistema de tickets. Integrado con base de datos MySQL y preparado para despliegue en AWS.
 
+## 📋 Requisitos
+- Node.js v18+
+- Docker y Docker Compose
+- MySQL/MariaDB (via Docker o local)
+- AWS CLI (solo para despliegue en producción)
+
+## 🛠️ Stack Tecnológico
+- **Node.js** 18 Alpine
+- **Express.js** ^4.21.1
+- **MySQL2** ^3.11.3
+- **CORS** ^2.8.5
+- **Dotenv** ^16.4.5
+
+## 📦 Instalación
+
+### Modo Desarrollo (sin Docker)
 ```bash
 npm install
-npm start            # Iniciar servidor puerto 3001
+npm run dev
 ```
 
-## Configurar .env
+### Con Docker Compose
+```bash
+docker-compose up --build
+```
 
+## 🔨 Comandos Disponibles
+```bash
+npm run dev    # Inicia servidor con watch
+npm start      # Inicia servidor en producción
+```
+
+## 🌍 Puerto
+- **3001** (API REST)
+
+## 🔐 Variables de Entorno
+Configuración en `docker-compose.yml` o archivo `.env`:
 ```
 PORT=3001
 DB_HOST=10.0.3.238
@@ -19,85 +49,53 @@ DB_PORT=3306
 DB_NAME=innovatech_ops
 DB_USER=innovatech_user
 DB_PASSWORD=innovatech_password
-CORS_ORIGIN=http://10.0.1.10
+CORS_ORIGIN=http://98.88.43.196
 ```
 
-## Docker
-
-```bash
-docker build -t innovatech-backend .
-docker run -p 3001:3001 --env-file .env innovatech-backend
+**Nota para desarrollo local:**
+```
+DB_HOST=localhost
+CORS_ORIGIN=http://localhost:80
 ```
 
-## Deploy
+## 📡 Endpoints Principales
+- `GET /health` - Health check del servidor
+- `GET /api/dashboard` - Dashboard con estadísticas
+- `GET /api/items` - Obtener todos los items del inventario
+- `POST /api/items` - Crear nuevo item
+- `GET /api/tickets` - Obtener todos los tickets
+- `POST /api/tickets` - Crear nuevo ticket
 
+## 📂 Estructura del Proyecto
+```
+src/
+├── app.js      # Configuración de Express
+├── db.js       # Configuración de base de datos
+└── server.js   # Punto de entrada
+```
+
+## 🐳 Docker
+- Imagen base: **Node.js 18 Alpine** (tamaño optimizado)
+- Instala solo dependencias de producción
+- Multiestage build no implementado (se ejecuta con npm start)
+- Puerto 3001 expuesto
+
+## 🔄 Integración con Base de Datos
+El backend se conecta a MySQL en **10.0.3.238:3306** con:
+- Base de datos: `innovatech_ops`
+- Usuario: `innovatech_user`
+
+## 🚀 Deploy
 Push a rama `deploy` dispara GitHub Actions que:
-1. Compila imagen Node.js
-2. Push a ECR
-3. Despliega en EC2 via SSM
+1. Compila imagen Docker Node.js
+2. Push a ECR (AWS Elastic Container Registry)
+3. Despliega en EC2 via Systems Manager
 
-## Endpoints
-
-- `GET/POST /api/products` - Gestión de productos
-- `GET/POST /api/tickets` - Gestión de tickets
-
-## Estructura
-
-- `src/` - Código Express (app.js, db.js, server.js)
-- `Dockerfile` - Build Node.js Alpine
-- `.github/workflows/backend-deploy.yml` - CI/CD
-# Compilar imagen
-docker build -t innovatech-backend:latest .
-
-# Ejecutar contenedor
-docker run -p 3001:3001 \
-  -e DB_HOST=host.docker.internal \
-  -e DB_PORT=3306 \
-  -e DB_NAME=innovatech_ops \
-  -e DB_USER=innovatech_user \
-  -e DB_PASSWORD=innovatech_password \
-  -e CORS_ORIGIN=http://localhost:3000 \
-  innovatech-backend:latest
-```
-
-### Docker Compose Local
-
-```bash
-# Iniciar todos los servicios (backend + base de datos)
-docker-compose up
-
-# Ejecutar en segundo plano
-docker-compose up -d
-
-# Ver logs
-docker-compose logs -f backend
-
-# Detener servicios
-docker-compose down
-```
-
-## Estrategia de Compilación Docker
-
-Dockerfile Node.js optimizado:
-- Usa imagen Node 18 Alpine (huella pequeña)
-- Instala solo dependencias de producción (npm ci --omit=dev)
-- Copia código fuente
-- Expone puerto 3001
-- Ejecuta comando npm start
-
-Tamaño de imagen final: aproximadamente 350MB
-
-## Endpoints API
-
-### Productos
-
-```
-GET /api/products             - Listar todos los productos
-POST /api/products            - Crear producto
-GET /api/products/:id         - Obtener detalles del producto
-PUT /api/products/:id         - Actualizar producto
-DELETE /api/products/:id      - Eliminar producto
-```
+## 📝 Notas Importantes
+- La base de datos debe estar corriendo antes de iniciar el backend
+- En producción, la BD está en el host **10.0.3.238**
+- El CORS permite solicitudes desde **http://98.88.43.196** en producción
+- Para desarrollo local, ajustar variables de entorno según `docker-compose.yml`
 
 ### Tickets
 
